@@ -17,14 +17,14 @@ const app = express();
 const reactStaticDir = new URL('../client/dist', import.meta.url).pathname;
 const uploadsStaticDir = new URL('public', import.meta.url).pathname;
 
-app.use(express.static(reactStaticDir));
-// Static directory for file uploads server/public/
-app.use(express.static(uploadsStaticDir));
-app.use(express.json());
+// app.use(express.static(reactStaticDir));
+// // Static directory for file uploads server/public/
+// app.use(express.static(uploadsStaticDir));
+// app.use(express.json());
 
-app.get('/api/hello', (req, res) => {
-  res.json({ message: 'Hello, World!' });
-});
+// app.get('/api/hello', (req, res) => {
+//   res.json({ message: 'Hello, World!' });
+// });
 
 /*
  * Handles paths that aren't handled by any other route handler.
