@@ -21,6 +21,7 @@ create table "public"."posts" (
   "notes"          text not null,
   "photoUrl"       text,
   "createdAt"      timestamptz(6) not null default now(),
+  "edited"         boolean,
   primary key ("postId")
 );
 
@@ -34,3 +35,11 @@ create table "public"."follow"(
   "following"      int,
   "followers"      int
 );
+
+create table "public"."comments"(
+  "commentId"      serial,
+  "userId"         int,
+  "postId"         int,
+  "commentText"    text,
+  primary key ("commentId")
+)

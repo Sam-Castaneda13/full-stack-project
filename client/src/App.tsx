@@ -1,6 +1,10 @@
 // import { useEffect, useState } from 'react';
+import { Route, Routes } from 'react-router-dom';
 import './App.css';
+import { BottomNavBar } from './BottomNavBar';
+import { HomePage } from './HomePage';
 import { NavBar } from './NavBar';
+import { UserPage } from './UserPage';
 
 export default function App() {
   // const [serverData, setServerData] = useState('');
@@ -20,7 +24,20 @@ export default function App() {
 
   return (
     <>
-      <NavBar />
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <>
+              <NavBar />
+              <BottomNavBar />
+            </>
+          }>
+          <Route index element={<HomePage />} />
+          <Route path="user" element={<UserPage />} />
+        </Route>
+      </Routes>
+
       {/* <h1>{serverData}</h1> */}
     </>
   );

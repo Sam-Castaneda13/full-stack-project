@@ -37,12 +37,435 @@
   color: #888;
 }
 
-.background-color {
-  background-color: purple;
+.nav-row {
+  display: flex;
+  position: fixed;
+  top: 0;
+  overflow: hidden;
+  background-color: #212279;
 }
 
-.row {
+.user-photo-home {
+  border-radius: 50%;
+  width: 100px;
+  height: 100px;
+  margin-top: 10px;
+}
+
+.user-profile-post {
+  align-content: center;
+  border-radius: 50%;
+  height: 50px;
+  width: 50px;
+  margin-top: 10px;
+}
+
+.homepage {
   display: flex;
-  color: black;
-  justify-content: space-between;
+  width: 100%;
+}
+
+.post-image {
+  width: 100%;
+  height: 375px;
+}
+
+.post-text {
+  margin-top: -10px;
+  width: 100%;
+}
+
+@media screen and (width > 374px) and (width < 576px) {
+  .nav-row {
+    justify-content: center;
+    align-items: center;
+    height: 50px;
+    max-width: 576px;
+    min-width: 375px;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    overflow: hidden;
+  }
+
+  .user-row {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+  }
+
+  .column-one-fourth {
+    text-align: center;
+    color: #88d8df;
+    padding-top: 15px;
+    padding-bottom: 15px;
+  }
+
+  .side-nav {
+    display: none !important;
+  }
+
+  .bot-nav-row {
+    display: flex;
+    justify-content: space-evenly;
+    align-content: center;
+    max-width: 576px;
+    min-width: 375px;
+    max-height: 60px;
+    background-color: #212279;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .container {
+    padding-top: 50px;
+    padding-bottom: 45px;
+  }
+
+  .side-options {
+    font-size: 45px;
+    align-self: center;
+    color: #88d8df;
+  }
+
+  .website {
+    font-size: x-large;
+    color: #88d8df;
+    padding-right: 90px;
+    padding-left: 95px;
+  }
+
+  .title {
+    display: none !important;
+  }
+
+  .user-photo-home {
+    display: none !important;
+  }
+
+  .post .post-inputs {
+    padding: 0;
+  }
+
+  .post-image {
+    padding: 0;
+    width: 100%;
+    min-width: 375px;
+    max-width: 576px;
+  }
+
+  .user-name-post {
+    padding-left: 5px;
+    color: #88d8df;
+  }
+
+  .time-date {
+    padding-left: 130px;
+    font-size: small;
+    padding-top: 21px;
+    color: #88d8df;
+  }
+
+  .post-text {
+    font-size: small;
+    color: #88d8df;
+    padding-left: 10px;
+    width: 95%;
+  }
+
+  .likes-options {
+    display: flex;
+  }
+
+  .likes-options div {
+    padding-left: 10px;
+    font-size: x-large;
+    padding-right: 5px;
+    margin-bottom: 50px;
+  }
+
+  .user-photo-home-phone {
+    border-radius: 50%;
+    padding-top: 5px;
+    height: 35px;
+  }
+
+  .home-button {
+    font-size: 30px;
+    color: #88d8df;
+  }
+
+  .post-button {
+    font-size: 30px;
+    color: #88d8df;
+  }
+
+  .user-profile-page {
+    border-radius: 50%;
+    height: 100px;
+    width: 100px;
+  }
+
+  .user-row button {
+    margin-bottom: 150px;
+  }
+}
+
+@media screen and (width > 575px) and (width < 768px) {
+  .nav-row {
+    justify-content: center;
+    align-items: center;
+    height: 50px;
+    max-width: 767px;
+    min-width: 576px;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    overflow: hidden;
+  }
+
+  .user-row {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+  }
+
+  .column-one-fourth {
+    text-align: center;
+    color: #88d8df;
+    padding-top: 15px;
+    padding-bottom: 15px;
+  }
+
+  .side-nav {
+    display: none !important;
+  }
+
+  .bot-nav-row {
+    display: flex;
+    justify-content: space-evenly;
+    align-content: center;
+    max-width: 767px;
+    min-width: 576px;
+    max-height: 60px;
+    background-color: #212279;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    overflow: hidden;
+    text-decoration: none;
+    color: #88d8df;
+  }
+
+  .container {
+    padding-top: 50px;
+    padding-bottom: 45px;
+  }
+
+  .side-options {
+    font-size: 45px;
+    align-self: center;
+    color: #88d8df;
+  }
+
+  .website {
+    font-size: x-large;
+    color: #88d8df;
+    padding-right: 90px;
+    padding-left: 95px;
+  }
+
+  .title {
+    display: none !important;
+  }
+
+  .user-photo-home {
+    display: none !important;
+  }
+
+  .post .post-inputs {
+    padding: 0;
+  }
+
+  .post-image {
+    padding: 0;
+    width: 100%;
+    min-width: 576px;
+    max-width: 767px;
+  }
+
+  .user-name-post {
+    padding-left: 5px;
+    color: #88d8df;
+  }
+
+  .time-date {
+    padding-left: 130px;
+    font-size: small;
+    padding-top: 21px;
+    color: #88d8df;
+  }
+
+  .post-text {
+    font-size: small;
+    color: #88d8df;
+    padding-left: 10px;
+    width: 95%;
+  }
+
+  .likes-options {
+    display: flex;
+  }
+
+  .likes-options div {
+    padding-left: 10px;
+    font-size: x-large;
+    padding-right: 5px;
+    margin-bottom: 50px;
+  }
+
+  .user-photo-home-phone {
+    border-radius: 50%;
+    padding-top: 5px;
+    height: 35px;
+  }
+
+  .home-button {
+    font-size: 30px;
+    text-decoration: #88d8df;
+    color: #88d8df;
+  }
+
+  .post-button {
+    font-size: 30px;
+    color: #88d8df;
+  }
+
+  .user-profile-page {
+    border-radius: 50%;
+    height: 100px;
+    width: 100px;
+  }
+
+  .user-row button {
+    margin-bottom: 150px;
+  }
+}
+
+@media screen and (width > 767px) {
+  .bot-nav-row {
+    display: none !important;
+  }
+
+  .user-row {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    max-width: 60%;
+  }
+
+  .column-one-fourth {
+    text-align: center;
+    color: #88d8df;
+    padding-top: 15px;
+    padding-bottom: 15px;
+  }
+
+  .nav-row {
+    display: none !important;
+  }
+
+  .homepage {
+    color: #88d8df;
+  }
+
+  body {
+    padding-left: 4%;
+  }
+
+  .post-image {
+    max-width: 75%;
+    height: 500px;
+  }
+
+  .post-text {
+    max-width: 75%;
+    font-size: x-large;
+    color: #88d8df;
+  }
+
+  .website {
+    display: none !important;
+  }
+
+  .container {
+    padding-top: 15px;
+    padding-bottom: 15px;
+  }
+
+  .side-nav {
+    color: #88d8df;
+    background-color: rgb(127, 165, 167, 0.4);
+    text-align: start;
+    height: 100%;
+    width: 20%;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    right: 0;
+  }
+
+  .side-nav div {
+    font-size: x-large;
+    padding-top: 50px;
+  }
+
+  .user-photo-side {
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+  }
+
+  .likes-options {
+    display: flex;
+  }
+
+  .likes-options div {
+    padding-left: 10px;
+    font-size: 50px;
+    padding-right: 30px;
+    margin-bottom: 50px;
+  }
+
+  .user-photo-home-phone {
+    border-radius: 50%;
+    padding-top: 5px;
+    height: 35px;
+  }
+
+  .home-button {
+    font-size: 30px;
+    color: #88d8df;
+  }
+
+  .post-button {
+    font-size: 30px;
+    color: #88d8df;
+  }
+
+  .user-profile-page {
+    border-radius: 50%;
+    height: 100px;
+    width: 100px;
+  }
+
+  .user-row button {
+    margin-bottom: 150px;
+  }
+
+  .user-name-page {
+    align-self: flex-start;
+  }
 }
