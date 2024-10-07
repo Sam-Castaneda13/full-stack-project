@@ -39,9 +39,6 @@
 
 .nav-row {
   display: flex;
-  position: fixed;
-  top: 0;
-  overflow: hidden;
   background-color: #212279;
 }
 
@@ -211,6 +208,47 @@
   .user-row button {
     margin-bottom: 150px;
   }
+
+  .user-name-page {
+    display: none !important;
+  }
+
+  .image-post-create {
+    padding-top: 25px;
+    padding-left: 10%;
+    width: 80%;
+    max-height: 341px;
+  }
+
+  .create-post-container {
+    color: #88d8df;
+  }
+
+  .create-image {
+    text-align: center;
+    font-size: larger;
+  }
+
+  .photo-url {
+    width: 80%;
+  }
+
+  .create-text {
+    text-align: center;
+    padding-top: 30px;
+    font-size: large;
+  }
+
+  .text {
+    width: 80%;
+    height: 100px;
+  }
+
+  .button-row {
+    display: flex;
+    justify-content: space-evenly;
+    padding-top: 20px;
+  }
 }
 
 @media screen and (width > 575px) and (width < 768px) {
@@ -228,7 +266,7 @@
 
   .user-row {
     display: flex;
-    justify-content: space-evenly;
+    justify-content: 25%;
     align-items: center;
   }
 
@@ -334,7 +372,6 @@
 
   .home-button {
     font-size: 30px;
-    text-decoration: #88d8df;
     color: #88d8df;
   }
 
@@ -351,6 +388,10 @@
 
   .user-row button {
     margin-bottom: 150px;
+  }
+
+  .user-name-page {
+    display: none !important;
   }
 }
 

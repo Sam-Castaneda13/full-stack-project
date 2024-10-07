@@ -12,7 +12,9 @@ export function BottomNavBar() {
           </Link>
         </div>
         <div className="post-button">
-          <IoIosAddCircleOutline />
+          <Link to="/post/new">
+            <IoIosAddCircleOutline />
+          </Link>
         </div>
         <Link to="/user">
           <img
