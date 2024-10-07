@@ -5,6 +5,7 @@ import { BottomNavBar } from './BottomNavBar';
 import { HomePage } from './HomePage';
 import { NavBar } from './NavBar';
 import { UserPage } from './UserPage';
+import { PostCreation } from './PostCreation';
 
 export default function App() {
   // const [serverData, setServerData] = useState('');
@@ -35,6 +36,7 @@ export default function App() {
           }>
           <Route index element={<HomePage />} />
           <Route path="user" element={<UserPage />} />
+          <Route path="/post/new" element={<PostCreation />} />
         </Route>
       </Routes>
 
