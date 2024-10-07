@@ -36,6 +36,67 @@ app.post('/api/posts', async (req, res, next) => {
   }
 });
 
+app.get('/api/posts', async (req, res, next) => {
+  try {
+    const sql = `
+    select * from "posts"
+    `;
+
+    const result = await db.query(sql);
+    res.json(result.rows);
+  } catch (err) {
+    next(err);
+  }
+});
+
+app.get('/api/posts/:postId', async (req, res, next) => {
+  try {
+    const { postId } = req.params;
+    if (!Number.isInteger(+postId)) {
+      throw new ClientError(400, 'postId must be an integer');
+    }
+    const sql = `
+      select *
+      from "posts"
+      where "postId" = $1;
+    `;
+    const result = await db.query(sql, [postId]);
+    const post = result.rows[0];
+    if (!post) throw new ClientError(404, `Post ${postId} not Found`);
+    res.json(post);
+  } catch (err) {
+    next(err);
+  }
+});
+
+app.put('/api/posts/:postId', async (req, res, next) => {
+  try {
+    const { postId } = req.params;
+    const { notes, photoUrl } = req.body;
+    if (!Number.isInteger(+postId)) {
+      throw new ClientError(400, 'postId must be an integer');
+    }
+    if (notes === undefined || photoUrl === undefined) {
+      throw new ClientError(400, 'Notes and PhotoUrl are required');
+    }
+
+    const sql = `
+  update "posts"
+  set "notes" = $1,
+      "photoUrl" = $2
+  where "postId" = $3
+  returning *;
+  `;
+
+    const results = await db.query(sql, [notes, photoUrl, postId]);
+    const update = results.rows[0];
+    if (!update) throw new ClientError(404, `post ${postId} not Found`);
+    res.json(update);
+  } catch (err) {
+    next(err);
+  }
+});
+
 /*
  * Handles paths that aren't handled by any other route handler.
  * It responds with `index.html` to support page refreshes with React Router.

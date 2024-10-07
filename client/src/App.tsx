@@ -36,7 +36,7 @@ export default function App() {
           }>
           <Route index element={<HomePage />} />
           <Route path="user" element={<UserPage />} />
-          <Route path="/post/new" element={<PostCreation />} />
+          <Route path="/post/:postId" element={<PostCreation />} />
         </Route>
       </Routes>
 
