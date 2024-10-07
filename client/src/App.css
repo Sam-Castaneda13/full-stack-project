@@ -72,6 +72,15 @@
   width: 100%;
 }
 
+ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.like {
+  color: red;
+}
+
 @media screen and (width > 374px) and (width < 576px) {
   .nav-row {
     justify-content: center;
@@ -159,16 +168,25 @@
   }
 
   .time-date {
-    padding-left: 130px;
+    padding-left: 100px;
     font-size: small;
-    padding-top: 21px;
     color: #88d8df;
+  }
+
+  .edit-button {
+    margin-left: 100px;
+    width: 70px;
+    height: 20px;
+    color: white;
+    font-size: xx-small;
+    background-color: #646cffaa;
   }
 
   .post-text {
     font-size: small;
     color: #88d8df;
     padding-left: 10px;
+    padding-top: 5px;
     width: 95%;
   }
 

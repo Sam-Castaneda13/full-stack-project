@@ -1,33 +1,58 @@
-import { FormEvent, useState } from 'react';
-import { type Post, addPost } from './Data';
-import { useNavigate } from 'react-router-dom';
+import { FormEvent, useEffect, useState } from 'react';
+import { type Post, addPost, readPost, updatePost } from './Data';
+import { useNavigate, useParams } from 'react-router-dom';
 
 export function PostCreation() {
+  const { postId } = useParams();
   const [post, setPost] = useState<Post>();
   const [photoUrl, setPhotoUrl] = useState<string>();
-  // const [isLoading, setIsLoading] = useState(false);
-  // const [error, setError] = useState<unknown>();
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<unknown>();
   const navigate = useNavigate();
+  const isEditing = postId && postId !== 'new';
 
-  let nine;
-
-  if (nine === 10) {
-    setPost;
-  }
+  useEffect(() => {
+    async function load(id: number) {
+      setIsLoading(true);
+      try {
+        const post = await readPost(id);
+        if (!post) throw new Error(`Post with ID ${id} not found`);
+        setPost(post);
+        setPhotoUrl(post.photoUrl);
+      } catch (err) {
+        setError(err);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    if (isEditing) load(+postId);
+  }, [postId]);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     try {
-      console.log('We are here');
       event.preventDefault();
       const formData = new FormData(event.currentTarget);
       const newPost = Object.fromEntries(formData) as unknown as Post;
-      console.log(newPost);
-      await addPost(newPost);
+      if (isEditing) {
+        await updatePost({ ...post, ...newPost });
+      } else {
+        await addPost(newPost);
+      }
       navigate('/');
     } catch (err) {
       console.log(err);
       alert(String(err));
     }
+  }
+
+  if (isLoading) return <div>Loading...</div>;
+  if (error) {
+    return (
+      <div>
+        Error Loading Post ID {postId}:{' '}
+        {error instanceof Error ? error.message : 'Unknown Error'}
+      </div>
+    );
   }
 
   return (
@@ -67,9 +92,13 @@ export function PostCreation() {
           />
         </div>
         <div className="button-row">
-          <button type="button" onClick={() => navigate('/')}>
-            Cancel
-          </button>
+          {' '}
+          {isEditing && <button>Delete Entry</button>}
+          {!isEditing && (
+            <button type="button" onClick={() => navigate('/')}>
+              Cancel
+            </button>
+          )}
           <button type="submit">Post</button>
         </div>
       </form>
