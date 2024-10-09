@@ -6,6 +6,9 @@ import { HomePage } from './HomePage';
 import { NavBar } from './NavBar';
 import { UserPage } from './UserPage';
 import { PostCreation } from './PostCreation';
+import { SignUpPage } from './SignUpPage';
+import { SignInPage } from './SignInPage';
+import { UserProvider } from './UserContent';
 
 export default function App() {
   // const [serverData, setServerData] = useState('');
@@ -24,7 +27,7 @@ export default function App() {
   // }, []);
 
   return (
-    <>
+    <UserProvider>
       <Routes>
         <Route
           path="/"
@@ -37,10 +40,11 @@ export default function App() {
           <Route index element={<HomePage />} />
           <Route path="user" element={<UserPage />} />
           <Route path="/post/:postId" element={<PostCreation />} />
+          <Route path="/sign-up" element={<SignUpPage />} />
+          <Route path="/sign-in" element={<SignInPage />} />
         </Route>
       </Routes>
-
       {/* <h1>{serverData}</h1> */}
-    </>
+    </UserProvider>
   );
 }

@@ -11,6 +11,7 @@ create table "public"."users"(
   "username"       text not null,
   "hashedPassword" text not null,
   "image"          text,
+  "createdAt"      timestamptz not null default now(),
   primary key ("userId"),
   unique ("username")
 );
@@ -20,7 +21,7 @@ create table "public"."posts" (
   "userId"         int,
   "notes"          text not null,
   "photoUrl"       text,
-  "createdAt"      timestamptz(6) not null default now(),
+  "createdAt"      timestamptz not null default now(),
   "edited"         boolean,
   primary key ("postId")
 );

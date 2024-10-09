@@ -94,6 +94,10 @@ ul {
     overflow: hidden;
   }
 
+  body {
+    padding-top: 30px;
+  }
+
   .user-row {
     display: flex;
     justify-content: space-evenly;
@@ -232,10 +236,11 @@ ul {
   }
 
   .image-post-create {
-    padding-top: 25px;
+    padding-top: 15px;
     padding-left: 10%;
     width: 80%;
-    max-height: 341px;
+    height: 100%;
+    max-height: 300px;
   }
 
   .create-post-container {
@@ -410,6 +415,14 @@ ul {
 
   .user-name-page {
     display: none !important;
+  }
+
+  .modal-container {
+    border: 1px solid black;
+  }
+
+  .modal-row {
+    position: fixed;
   }
 }
 
