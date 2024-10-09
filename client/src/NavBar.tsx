@@ -25,7 +25,9 @@ export function NavBar() {
           <a>Gamer Page</a>
         </div>
         <div>
-          <CiLogin /> Login/Sign Up
+          <Link to="/sign-up">
+            <CiLogin /> Login/Sign Up
+          </Link>
         </div>
         <div>
           <Link to="/">
@@ -42,7 +44,9 @@ export function NavBar() {
           </Link>
         </div>
         <div>
-          <IoIosAddCircleOutline /> Create Post
+          <Link to="/post/new">
+            <IoIosAddCircleOutline /> Create Post
+          </Link>
         </div>
         <div>
           <CiSettings /> Settings

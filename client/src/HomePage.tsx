@@ -63,7 +63,7 @@ function PostDetails({ posts }: PostProps) {
             src="https://static.wikia.nocookie.net/nondisney/images/f/fa/Lord_Voldemort_image.jpeg"
             className="user-profile-post"
           />
-          <h4 className="user-name-post">Voldemort</h4>
+          <h4 className="user-name-post">{posts.username}</h4>
           <div>
             <Link to={`/post/${posts.postId}`}>
               <button className="edit-button">Edit</button>

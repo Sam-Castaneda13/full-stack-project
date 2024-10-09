@@ -1,5 +1,5 @@
 import { FormEvent, useEffect, useState } from 'react';
-import { type Post, addPost, readPost, updatePost } from './Data';
+import { type Post, addPost, deletePost, readPost, updatePost } from './Data';
 import { useNavigate, useParams } from 'react-router-dom';
 
 export function PostCreation() {
@@ -8,6 +8,7 @@ export function PostCreation() {
   const [photoUrl, setPhotoUrl] = useState<string>();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<unknown>();
+  const [isDeleting, setIsDeleting] = useState(false);
   const navigate = useNavigate();
   const isEditing = postId && postId !== 'new';
 
@@ -43,6 +44,12 @@ export function PostCreation() {
       console.log(err);
       alert(String(err));
     }
+  }
+
+  function handleDelete() {
+    if (!post?.postId) throw new Error(`If you see this well thats bad`);
+    deletePost(post.postId);
+    navigate('/');
   }
 
   if (isLoading) return <div>Loading...</div>;
@@ -93,11 +100,32 @@ export function PostCreation() {
         </div>
         <div className="button-row">
           {' '}
-          {isEditing && <button>Delete Entry</button>}
+          {isEditing && (
+            <button type="button" onClick={() => setIsDeleting(true)}>
+              Delete Entry
+            </button>
+          )}
           {!isEditing && (
             <button type="button" onClick={() => navigate('/')}>
               Cancel
             </button>
+          )}
+          {isDeleting && (
+            <div className="modal-container">
+              <div className="modal-row">
+                <p>Are you sure you want to delete this Post</p>
+              </div>
+              <div>
+                <button
+                  className="modal-button"
+                  onClick={() => setIsDeleting(false)}>
+                  Cancel
+                </button>
+                <button className="modal-button" onClick={handleDelete}>
+                  Confirm
+                </button>
+              </div>
+            </div>
           )}
           <button type="submit">Post</button>
         </div>
