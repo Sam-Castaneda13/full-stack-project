@@ -77,6 +77,10 @@ ul {
   padding-left: 0;
 }
 
+.hidden {
+  display: none !important;
+}
+
 .like {
   color: red;
 }
@@ -92,6 +96,17 @@ ul {
     width: 100%;
     top: 0;
     overflow: hidden;
+  }
+
+  .comment-profile {
+    display: flex;
+    text-align: center;
+  }
+
+  .comment-picture {
+    border-radius: 50%;
+    height: 30px;
+    width: 30px;
   }
 
   body {

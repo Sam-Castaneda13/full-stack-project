@@ -11,6 +11,15 @@ export type Post = {
   image?: string;
 };
 
+export type Comment = {
+  commentId: number;
+  userId: number;
+  postId: number;
+  commentText: string;
+  username?: string;
+  image?: string;
+};
+
 const authKey = 'um.auth';
 
 type Auth = {
@@ -139,7 +148,6 @@ export async function checkIfLiked(postId: number): Promise<{ liked: number }> {
   });
   if (!res.ok) throw new Error(`Error: ${res.status}`);
   const checkedLike = await res.json();
-  console.log(checkedLike);
   return checkedLike;
 }
 
@@ -153,8 +161,55 @@ export async function checkIfDisliked(
   });
   if (!res.ok) throw new Error(`Error: ${res.status}`);
   const checkedDislike = await res.json();
-  console.log(checkedDislike);
   return checkedDislike;
+}
+
+export async function countLikes(postId: number): Promise<{ count: number }> {
+  const res = await fetch(`/api/countLike/${postId}`, {
+    headers: {
+      Authorization: `Bearer ${readToken()}`,
+    },
+  });
+  if (!res.ok) throw new Error(`Error: ${res.status}`);
+  const count = await res.json();
+  return count;
+}
+
+export async function countDislikes(
+  postId: number
+): Promise<{ count: number }> {
+  const res = await fetch(`/api/countDislike/${postId}`, {
+    headers: {
+      Authorization: `Bearer ${readToken()}`,
+    },
+  });
+  if (!res.ok) throw new Error(`Error: ${res.status}`);
+  const count = await res.json();
+  return count;
+}
+
+export async function readComments(postId: number): Promise<Comment[]> {
+  const response = await fetch(`/api/comments/${postId}`);
+  if (!response.ok) throw new Error(`Error: ${response.status}`);
+  const comments = await response.json();
+  return comments;
+}
+
+export async function addComment(
+  com: Comment,
+  postId: number
+): Promise<Comment> {
+  const response = await fetch(`/api/comments/${postId}`, {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+      Authorization: `Bearer ${readToken()}`,
+    },
+    body: JSON.stringify(com),
+  });
+  if (!response.ok) throw new Error(`Error: ${response.status}`);
+  const newPost = await response.json();
+  return newPost;
 }
 
 export function saveAuth(user: User, token: string): void {

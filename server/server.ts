@@ -6,6 +6,7 @@ import argon2 from 'argon2';
 import jwt from 'jsonwebtoken';
 import { ClientError, errorMiddleware, authMiddleware } from './lib/index.js';
 import { useParams } from 'react-router-dom';
+import { runInNewContext } from 'vm';
 
 const db = new pg.Pool({
   connectionString: process.env.DATABASE_URL,
@@ -269,6 +270,78 @@ app.get('/api/ifDisliked/:postId', authMiddleware, async (req, res, next) => {
     const results = await db.query(sql, params);
     const ifDisliked = results.rows[0];
     res.json(ifDisliked ?? {});
+  } catch (err) {
+    next(err);
+  }
+});
+
+app.get('/api/countLike/:postId', async (req, res, next) => {
+  try {
+    const { postId } = req.params;
+    const sql = `
+    select count("liked")
+    from "likes"
+    where "post" = $1
+    `;
+
+    const params = [postId];
+    const results = await db.query(sql, params);
+    const liked = results.rows[0];
+
+    res.json(liked);
+  } catch (err) {
+    next(err);
+  }
+});
+
+app.get('/api/countDislike/:postId', async (req, res, next) => {
+  try {
+    const { postId } = req.params;
+    const sql = `
+    select count("disliked")
+    from "likes"
+    where "post" =$1
+    `;
+
+    const params = [postId];
+    const results = await db.query(sql, params);
+    const disliked = results.rows[0];
+    res.json(disliked);
+  } catch (err) {
+    next(err);
+  }
+});
+
+app.get('/api/comments/:postId', async (req, res, next) => {
+  try {
+    const { postId } = req.body;
+    const sql = `
+    select "comments".*, "username", "image" from "comments"
+    join "users" using ("userId")
+    where "postId" = $1
+    `;
+
+    const result = await db.query(sql, [postId]);
+    res.json(result.rows);
+  } catch (err) {
+    next(err);
+  }
+});
+
+app.post('/api/comments/:postId', authMiddleware, async (req, res, next) => {
+  try {
+    const { postId } = req.params;
+    const { commentText } = req.body;
+
+    const sql = `
+    insert into "comments" ("commentText", "userId", "postId" )
+    values ($1, $2, $3)
+    returning *;
+    `;
+
+    const params = [commentText, req.user?.userId, postId];
+    const result = await db.query(sql, params);
+    res.json(result.rows[0]);
   } catch (err) {
     next(err);
   }

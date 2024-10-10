@@ -1,16 +1,21 @@
-import { useEffect, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 import { FaCommentAlt } from 'react-icons/fa';
 import { FaHeart } from 'react-icons/fa';
 import { MdHeartBroken } from 'react-icons/md';
 import {
   checkIfDisliked,
   checkIfLiked,
+  countDislikes,
+  countLikes,
   dislikePost,
   likePost,
   Post,
   readPosts,
   unDislikePost,
   unlikePost,
+  Comment,
+  readComments,
+  addComment,
 } from './Data';
 import { Link } from 'react-router-dom';
 import { useUser } from './useUser';
@@ -66,6 +71,10 @@ type PostProps = {
 
 function PostDetails({ posts }: PostProps) {
   const { user } = useUser();
+  const [comment, setComment] = useState<Comment[]>();
+  const [showComments, setShowComments] = useState('hidden');
+  const [countLike, setCountLike] = useState(0);
+  const [countDislike, setCountDislike] = useState(0);
   const [like, setLike] = useState('');
   const [dislike, setDisLike] = useState('');
 
@@ -80,6 +89,13 @@ function PostDetails({ posts }: PostProps) {
         if (ifDisliked.disliked === user?.userId) {
           setDisLike('disliked');
         }
+        const likes = await countLikes(id);
+        const disliked = await countDislikes(id);
+        setCountDislike(disliked.count);
+        setCountLike(likes.count);
+
+        const comment = await readComments(id);
+        setComment(comment);
       } catch (err) {
         alert(err);
         console.log(err);
@@ -87,6 +103,18 @@ function PostDetails({ posts }: PostProps) {
     }
     load(posts.postId);
   }, [posts.postId, user?.userId]);
+
+  async function handleCommentSubmit(event: FormEvent<HTMLFormElement>) {
+    try {
+      event.preventDefault();
+      const formData = new FormData(event.currentTarget);
+      const newComment = Object.fromEntries(formData) as unknown as Comment;
+      await addComment(newComment, posts.postId);
+    } catch (err) {
+      alert(err);
+      console.log(err);
+    }
+  }
 
   async function handleLikeClick(id: number) {
     try {
@@ -105,6 +133,11 @@ function PostDetails({ posts }: PostProps) {
       }
     } catch (err) {
       console.log(err);
+    } finally {
+      const likes = await countLikes(id);
+      const disliked = await countDislikes(id);
+      setCountDislike(disliked.count);
+      setCountLike(likes.count);
     }
   }
 
@@ -125,6 +158,19 @@ function PostDetails({ posts }: PostProps) {
       }
     } catch (err) {
       console.log(err);
+    } finally {
+      const likes = await countLikes(id);
+      const disliked = await countDislikes(id);
+      setCountDislike(disliked.count);
+      setCountLike(likes.count);
+    }
+  }
+
+  function handleCommentClick() {
+    if (showComments === 'hidden') {
+      setShowComments('');
+    } else if (showComments === '') {
+      setShowComments('hidden');
     }
   }
 
@@ -150,17 +196,61 @@ function PostDetails({ posts }: PostProps) {
         <div className="likes-options">
           <div className={like} onClick={() => handleLikeClick(posts.postId)}>
             <FaHeart />
+            {`${countLike}`}
           </div>
           <div
             className={dislike}
             onClick={() => handleDisLikeClick(posts.postId)}>
             <MdHeartBroken />
+            {`${countDislike}`}
           </div>
-          <div className="comment">
+          <div className="comment" onClick={handleCommentClick}>
             <FaCommentAlt />
           </div>
         </div>
+
+        <div className={showComments}>
+          <div>
+            <form onSubmit={handleCommentSubmit}>
+              <div>
+                <label htmlFor="commentText">Comment</label>
+              </div>
+              <input
+                id="commentText"
+                name="commentText"
+                type="text"
+                placeholder="Enter your Comment"
+                required
+              />
+              <button type="submit">Comment</button>
+            </form>
+          </div>
+          <ul>
+            {comment?.map((com) => (
+              <CommentList key={com.commentId} comments={com} />
+            ))}
+          </ul>
+        </div>
       </li>
     </>
+  );
+}
+
+type CommentProps = {
+  comments: Comment;
+};
+function CommentList({ comments }: CommentProps) {
+  return (
+    <li>
+      <div className="comment-box">
+        <div className="comment-profile">
+          <img src={comments.image} className="comment-picture" />
+          <p>{comments.username}</p>
+        </div>
+        <div className="comment-text">
+          <p>{comments.commentText}</p>
+        </div>
+      </div>
+    </li>
   );
 }
