@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unused-vars -- Remove when used */
 import 'dotenv/config';
 import express from 'express';
-import pg from 'pg';
+import pg, { escapeLiteral } from 'pg';
 import argon2 from 'argon2';
 import jwt from 'jsonwebtoken';
 import { ClientError, errorMiddleware, authMiddleware } from './lib/index.js';
+import { useParams } from 'react-router-dom';
 
 const db = new pg.Pool({
   connectionString: process.env.DATABASE_URL,
@@ -25,7 +26,6 @@ const uploadsStaticDir = new URL('public', import.meta.url).pathname;
 
 app.post('/api/posts', authMiddleware, async (req, res, next) => {
   try {
-    console.log(req.body);
     const { notes, photoUrl } = req.body;
     const sql = `
     insert into "posts" ("notes", "photoUrl", "userId")
@@ -169,6 +169,106 @@ app.post('/api/auth/sign-up', async (req, res, next) => {
     const result = await db.query(sql, params);
     const [user] = result.rows;
     res.status(201).json(user);
+  } catch (err) {
+    next(err);
+  }
+});
+
+app.post('/api/like/:postId', authMiddleware, async (req, res, next) => {
+  try {
+    const { postId } = req.params;
+    const sql = `
+  insert into "likes" ("liked", "post")
+  values ($1, $2)
+  `;
+    const params = [req.user?.userId, postId];
+    const result = await db.query(sql, params);
+    const like = result.rows[0];
+    res.json(like);
+  } catch (err) {
+    next(err);
+  }
+});
+
+app.delete('/api/unlike/:postId', authMiddleware, async (req, res, next) => {
+  try {
+    const { postId } = req.params;
+    const sql = `
+    delete
+    from "likes"
+    where "post" = $1 and "liked" = $2
+    returning *;
+  `;
+    const params = [postId, req.user?.userId];
+    const result = await db.query(sql, params);
+    const unlike = result.rows[0];
+    res.json(unlike);
+  } catch (err) {
+    next(err);
+  }
+});
+
+app.post('/api/dislike/:postId', authMiddleware, async (req, res, next) => {
+  try {
+    const { postId } = req.params;
+    const sql = `
+  insert into "likes" ("disliked", "post")
+  values ($1, $2)
+  `;
+    const params = [req.user?.userId, postId];
+    const result = await db.query(sql, params);
+    const dislike = result.rows[0];
+    res.json(dislike);
+  } catch (err) {
+    next(err);
+  }
+});
+
+app.delete('/api/unDislike/:postId', authMiddleware, async (req, res, next) => {
+  try {
+    const { postId } = req.params;
+    const sql = `
+    delete
+    from "likes"
+    where "post" = $1 and "disliked" = $2
+    returning *;
+  `;
+    const params = [postId, req.user?.userId];
+    const result = await db.query(sql, params);
+    const unDislike = result.rows[0];
+    res.json(unDislike);
+  } catch (err) {
+    next(err);
+  }
+});
+
+app.get('/api/ifLiked/:postId', authMiddleware, async (req, res, next) => {
+  try {
+    const { postId } = req.params;
+    const sql = `
+    select "liked" from "likes"
+    where "liked" = $1 and "post" = $2
+    `;
+    const params = [req.user?.userId, postId];
+    const results = await db.query(sql, params);
+    const ifLiked = results.rows[0];
+    res.json(ifLiked ?? {});
+  } catch (err) {
+    next(err);
+  }
+});
+
+app.get('/api/ifDisliked/:postId', authMiddleware, async (req, res, next) => {
+  try {
+    const { postId } = req.params;
+    const sql = `
+    select "disliked" from "likes"
+    where "disliked" = $1 and "post" = $2
+    `;
+    const params = [req.user?.userId, postId];
+    const results = await db.query(sql, params);
+    const ifDisliked = results.rows[0];
+    res.json(ifDisliked ?? {});
   } catch (err) {
     next(err);
   }

@@ -272,6 +272,14 @@ ul {
     justify-content: space-evenly;
     padding-top: 20px;
   }
+
+  .liked {
+    color: red;
+  }
+
+  .disliked {
+    color: blue;
+  }
 }
 
 @media screen and (width > 575px) and (width < 768px) {
@@ -424,6 +432,14 @@ ul {
   .modal-row {
     position: fixed;
   }
+
+  .liked {
+    color: red;
+  }
+
+  .disliked {
+    color: blue;
+  }
 }
 
 @media screen and (width > 767px) {
@@ -539,5 +555,13 @@ ul {
 
   .user-name-page {
     align-self: flex-start;
+  }
+
+  .liked {
+    color: red;
+  }
+
+  .disliked {
+    color: blue;
   }
 }

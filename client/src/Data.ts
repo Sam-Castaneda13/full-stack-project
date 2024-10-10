@@ -1,7 +1,7 @@
 import { User } from './UserContent';
 
 export type Post = {
-  postId?: number;
+  postId: number;
   userId?: number;
   notes: string;
   photoUrl: string;
@@ -88,8 +88,73 @@ export async function readUserPage(
   const res = await fetch(`/api/user/${userId}`);
   if (!res.ok) throw new Error(`Error: ${res.status}`);
   const userPage = await res.json();
-  console.log(userPage);
   return userPage;
+}
+
+export async function likePost(postId: number): Promise<void> {
+  const res = await fetch(`/api/like/${postId}`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${readToken()}`,
+    },
+  });
+  if (!res.ok) throw new Error(`Error: ${res.status}`);
+}
+
+export async function unlikePost(postId: number): Promise<void> {
+  const res = await fetch(`/api/unlike/${postId}`, {
+    method: 'DELETE',
+    headers: {
+      Authorization: `Bearer ${readToken()}`,
+    },
+  });
+  if (!res.ok) throw new Error(`Error: ${res.status}`);
+}
+
+export async function dislikePost(postId: number): Promise<void> {
+  const res = await fetch(`/api/dislike/${postId}`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${readToken()}`,
+    },
+  });
+  if (!res.ok) throw new Error(`Error: ${res.status}`);
+}
+
+export async function unDislikePost(postId: number): Promise<void> {
+  const res = await fetch(`/api/unDislike/${postId}`, {
+    method: 'DELETE',
+    headers: {
+      Authorization: `Bearer ${readToken()}`,
+    },
+  });
+  if (!res.ok) throw new Error(`Error: ${res.status}`);
+}
+
+export async function checkIfLiked(postId: number): Promise<{ liked: number }> {
+  const res = await fetch(`/api/ifLiked/${postId}`, {
+    headers: {
+      Authorization: `Bearer ${readToken()}`,
+    },
+  });
+  if (!res.ok) throw new Error(`Error: ${res.status}`);
+  const checkedLike = await res.json();
+  console.log(checkedLike);
+  return checkedLike;
+}
+
+export async function checkIfDisliked(
+  postId: number
+): Promise<{ disliked: number }> {
+  const res = await fetch(`/api/ifDisliked/${postId}`, {
+    headers: {
+      Authorization: `Bearer ${readToken()}`,
+    },
+  });
+  if (!res.ok) throw new Error(`Error: ${res.status}`);
+  const checkedDislike = await res.json();
+  console.log(checkedDislike);
+  return checkedDislike;
 }
 
 export function saveAuth(user: User, token: string): void {

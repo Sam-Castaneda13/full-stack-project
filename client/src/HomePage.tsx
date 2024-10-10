@@ -1,9 +1,19 @@
 import { useEffect, useState } from 'react';
 import { FaCommentAlt } from 'react-icons/fa';
 import { FaHeart } from 'react-icons/fa';
-import { MdOutlineHeartBroken } from 'react-icons/md';
-import { Post, readPosts } from './Data';
+import { MdHeartBroken } from 'react-icons/md';
+import {
+  checkIfDisliked,
+  checkIfLiked,
+  dislikePost,
+  likePost,
+  Post,
+  readPosts,
+  unDislikePost,
+  unlikePost,
+} from './Data';
 import { Link } from 'react-router-dom';
+import { useUser } from './useUser';
 
 export function HomePage() {
   const [posts, setPosts] = useState<Post[]>();
@@ -55,6 +65,69 @@ type PostProps = {
 };
 
 function PostDetails({ posts }: PostProps) {
+  const { user } = useUser();
+  const [like, setLike] = useState('');
+  const [dislike, setDisLike] = useState('');
+
+  useEffect(() => {
+    async function load(id: number) {
+      try {
+        const ifLiked = await checkIfLiked(id);
+        if (ifLiked.liked === user?.userId) {
+          setLike('liked');
+        }
+        const ifDisliked = await checkIfDisliked(id);
+        if (ifDisliked.disliked === user?.userId) {
+          setDisLike('disliked');
+        }
+      } catch (err) {
+        alert(err);
+        console.log(err);
+      }
+    }
+    load(posts.postId);
+  }, [posts.postId, user?.userId]);
+
+  async function handleLikeClick(id: number) {
+    try {
+      if (like === '') {
+        await likePost(id);
+        setLike('liked');
+        if (dislike === 'disliked') {
+          await unDislikePost(id);
+          setDisLike('');
+        }
+        return;
+      } else if (like === 'liked') {
+        await unlikePost(id);
+        setLike('');
+        return;
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  async function handleDisLikeClick(id: number) {
+    try {
+      if (dislike === '') {
+        await dislikePost(id);
+        setDisLike('disliked');
+        if (like === 'liked') {
+          await unlikePost(id);
+          setLike('');
+        }
+        return;
+      } else if (dislike === 'disliked') {
+        await unDislikePost(id);
+        setDisLike('');
+        return;
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
   return (
     <>
       <li>
@@ -75,11 +148,13 @@ function PostDetails({ posts }: PostProps) {
           <h3 className="post-text">{posts.notes}</h3>
         </div>
         <div className="likes-options">
-          <div>
+          <div className={like} onClick={() => handleLikeClick(posts.postId)}>
             <FaHeart />
           </div>
-          <div className="dislike">
-            <MdOutlineHeartBroken />
+          <div
+            className={dislike}
+            onClick={() => handleDisLikeClick(posts.postId)}>
+            <MdHeartBroken />
           </div>
           <div className="comment">
             <FaCommentAlt />

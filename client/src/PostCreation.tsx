@@ -27,7 +27,7 @@ export function PostCreation() {
       }
     }
     if (isEditing) load(+postId);
-  }, [postId]);
+  }, [isEditing, postId]);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     try {
