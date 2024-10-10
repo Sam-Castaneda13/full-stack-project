@@ -4,6 +4,7 @@ import { IoIosAddCircleOutline } from 'react-icons/io';
 import { CiLogin } from 'react-icons/ci';
 import { CiSettings } from 'react-icons/ci';
 import { Link, Outlet } from 'react-router-dom';
+import { FaUser } from 'react-icons/fa';
 export function NavBar() {
   return (
     <>
@@ -36,10 +37,7 @@ export function NavBar() {
         </div>
         <div>
           <Link to="/user">
-            <img
-              src="https://static.wikia.nocookie.net/nondisney/images/f/fa/Lord_Voldemort_image.jpeg"
-              className="user-photo-side"
-            />
+            <FaUser />
             User Page
           </Link>
         </div>

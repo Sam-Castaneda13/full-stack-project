@@ -38,7 +38,7 @@ export default function App() {
             </>
           }>
           <Route index element={<HomePage />} />
-          <Route path="user" element={<UserPage />} />
+          <Route path="/user/:userId" element={<UserPage />} />
           <Route path="/post/:postId" element={<PostCreation />} />
           <Route path="/sign-up" element={<SignUpPage />} />
           <Route path="/sign-in" element={<SignInPage />} />

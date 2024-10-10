@@ -60,12 +60,12 @@ export function SignUpPage() {
           </div>
 
           <div className="input-group">
-            <label htmlFor="user-profile">User Profile</label>
+            <label htmlFor="image">User Profile</label>
             <input
               type="text"
-              id="user-profile"
-              name="user-profile"
-              placeholder="Enter your email"
+              id="image"
+              name="image"
+              placeholder="Enter your Profile Picture"
               required
             />
           </div>

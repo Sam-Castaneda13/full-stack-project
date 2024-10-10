@@ -4,6 +4,9 @@ import { readToken, readUser, removeAuth, saveAuth } from './Data.ts';
 export type User = {
   userId: number;
   username: string;
+  image?: string;
+  notes?: string;
+  photoUrl?: string;
 };
 
 export type UserContextValues = {

@@ -6,7 +6,7 @@ export type Post = {
   notes: string;
   photoUrl: string;
   createdAt?: string;
-  edited: false;
+  edited?: false;
   username?: string;
   image?: string;
 };
@@ -80,6 +80,16 @@ export async function addAccount(user: User): Promise<User> {
   if (!response.ok) throw new Error(`Error: ${response.status}`);
   const newAccount = await response.json();
   return newAccount;
+}
+
+export async function readUserPage(
+  userId: number
+): Promise<{ user: User; posts: Post[] }> {
+  const res = await fetch(`/api/user/${userId}`);
+  if (!res.ok) throw new Error(`Error: ${res.status}`);
+  const userPage = await res.json();
+  console.log(userPage);
+  return userPage;
 }
 
 export function saveAuth(user: User, token: string): void {
