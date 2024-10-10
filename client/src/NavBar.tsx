@@ -5,7 +5,9 @@ import { CiLogin } from 'react-icons/ci';
 import { CiSettings } from 'react-icons/ci';
 import { Link, Outlet } from 'react-router-dom';
 import { FaUser } from 'react-icons/fa';
+import { useUser } from './useUser';
 export function NavBar() {
+  const { user } = useUser();
   return (
     <>
       <div className="nav-row">
@@ -36,7 +38,7 @@ export function NavBar() {
           </Link>
         </div>
         <div>
-          <Link to="/user">
+          <Link to={`/user/${user?.userId}`}>
             <FaUser />
             User Page
           </Link>
