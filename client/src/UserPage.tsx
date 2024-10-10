@@ -20,9 +20,7 @@ export function UserPage() {
         const { user, posts } = await readUserPage(id);
         if (!user) throw new Error(`User with ID ${id} not found`);
         setUser(user);
-
         setPosts(posts);
-        console.log(posts);
       } catch (err) {
         setError(err);
       } finally {
@@ -30,7 +28,7 @@ export function UserPage() {
       }
     }
     if (isUser) loadUser(+userId);
-  }, [userId]);
+  }, [isUser, userId]);
 
   if (isLoading) return <div>Loading...</div>;
   if (error) {

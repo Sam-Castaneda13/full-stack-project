@@ -90,9 +90,8 @@ app.put('/api/posts/:postId', authMiddleware, async (req, res, next) => {
     const sql = `
   update "posts"
   set "notes" = $1,
-      "photoUrl" = $2,
-      "userId" = $3
-  where "postId" = $4
+      "photoUrl" = $2
+  where "postId" = $4 and "userId" = $3
   returning *;
   `;
 
@@ -103,7 +102,8 @@ app.put('/api/posts/:postId', authMiddleware, async (req, res, next) => {
       postId,
     ]);
     const update = results.rows[0];
-    if (!update) throw new ClientError(404, `post ${postId} not Found`);
+    if (!update)
+      throw new ClientError(401, `post ${postId} not Found or Unauthorized`);
     res.json(update);
   } catch (err) {
     next(err);
@@ -182,7 +182,8 @@ app.post('/api/auth/sign-in', async (req, res, next) => {
     }
     const sql = `
     select "userId",
-           "hashedPassword"
+           "hashedPassword",
+           "image"
       from "users"
      where "username" = $1
   `;
@@ -192,11 +193,11 @@ app.post('/api/auth/sign-in', async (req, res, next) => {
     if (!user) {
       throw new ClientError(401, 'invalid login');
     }
-    const { userId, hashedPassword } = user;
+    const { userId, hashedPassword, image } = user;
     if (!(await argon2.verify(hashedPassword, password))) {
       throw new ClientError(401, 'invalid login');
     }
-    const payload = { userId, username };
+    const payload = { userId, username, image };
     const token = jwt.sign(payload, hashKey);
     res.json({ token, user: payload });
   } catch (err) {
