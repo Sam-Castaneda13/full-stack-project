@@ -9,7 +9,3 @@
 --      ('Learn to code', false),
 --      ('Build projects', false),
 --      ('Get a job', false);
-
-insert into "posts" ("userId","notes","photoUrl")
-  values
-  (1, 'This is a test', 'IMG URL')

@@ -128,19 +128,44 @@ app.delete('/api/posts/:postId', authMiddleware, async (req, res, next) => {
   }
 });
 
+app.get('/api/user/:userId', async (req, res, next) => {
+  try {
+    const { userId } = req.params;
+    const usersql = `
+    select * from "users"
+    where "userId" = $1
+    `;
+
+    const postsql = `
+    select "posts".*, "username", "image" from "posts"
+    join "users" using ("userId")
+    where "userId" = $1
+    `;
+
+    const userQuery = await db.query(usersql, [userId]);
+    const user = userQuery.rows[0];
+    const postQuery = await db.query(postsql, [userId]);
+    const posts = postQuery.rows;
+    if (!user) throw new ClientError(404, 'Could not delete post');
+    res.json({ user, posts });
+  } catch (err) {
+    next(err);
+  }
+});
+
 app.post('/api/auth/sign-up', async (req, res, next) => {
   try {
-    const { username, password } = req.body;
+    const { username, password, image } = req.body;
     if (!username || !password) {
       throw new ClientError(400, 'username and password are required fields');
     }
     const hashedPassword = await argon2.hash(password);
     const sql = `
-      insert into "users" ("username", "hashedPassword")
-      values ($1, $2)
-      returning "userId", "username", "createdAt"
+      insert into "users" ("username", "hashedPassword", image)
+      values ($1, $2, $3)
+      returning "userId", "username", "createdAt", "image"
     `;
-    const params = [username, hashedPassword];
+    const params = [username, hashedPassword, image];
     const result = await db.query(sql, params);
     const [user] = result.rows;
     res.status(201).json(user);
@@ -181,7 +206,7 @@ app.post('/api/auth/sign-in', async (req, res, next) => {
 /*
  * Handles paths that aren't handled by any other route handler.
  * It responds with `index.html` to support page refreshes with React Router.
- * This must be the _last_ route, just before errorMiddleware.
+ * This must be the _last_ route, just before errorMiddleware.  hh
  */
 app.get('*', (req, res) => res.sendFile(`${reactStaticDir}/index.html`));
 
