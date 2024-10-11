@@ -1,4 +1,4 @@
-// import { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import './App.css';
 import { BottomNavBar } from './BottomNavBar';
@@ -11,20 +11,20 @@ import { SignInPage } from './SignInPage';
 import { UserProvider } from './UserContent';
 
 export default function App() {
-  // const [serverData, setServerData] = useState('');
+  const [serverData, setServerData] = useState('');
 
-  // useEffect(() => {
-  //   async function readServerData() {
-  //     const resp = await fetch('/api/hello');
-  //     const data = await resp.json();
+  useEffect(() => {
+    async function readServerData() {
+      const resp = await fetch('/api/hello');
+      const data = await resp.json();
 
-  //     console.log('Data from server:', data);
+      console.log('Data from server:', data);
 
-  //     setServerData(data.message);
-  //   }
+      setServerData(data.message);
+    }
 
-  //   readServerData();
-  // }, []);
+    readServerData();
+  }, []);
 
   return (
     <UserProvider>
@@ -44,7 +44,7 @@ export default function App() {
           <Route path="/sign-in" element={<SignInPage />} />
         </Route>
       </Routes>
-      {/* <h1>{serverData}</h1> */}
+      <h1>{serverData}</h1>
     </UserProvider>
   );
 }
