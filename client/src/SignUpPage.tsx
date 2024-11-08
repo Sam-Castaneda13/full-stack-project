@@ -2,8 +2,15 @@ import { Link, useNavigate } from 'react-router-dom';
 import { addAccount } from './Data';
 import { User } from './UserContent';
 import { FormEvent, useState } from 'react';
+import { useUser } from './useUser';
+
+type AuthData = {
+  user: User;
+  token: string;
+};
 
 export function SignUpPage() {
+  const { handleSignIn } = useUser();
   const [error, setError] = useState<unknown>();
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
@@ -15,6 +22,19 @@ export function SignUpPage() {
       const formData = new FormData(event.currentTarget);
       const newAccount = Object.fromEntries(formData) as unknown as User;
       await addAccount(newAccount);
+      const req = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newAccount),
+      };
+      const res = await fetch('/api/auth/sign-in', req);
+      if (!res.ok) {
+        throw new Error(`fetch Error ${res.status}`);
+      }
+      const { user, token } = (await res.json()) as AuthData;
+      handleSignIn(user, token);
+      console.log('Signed In', user);
+      console.log('Received token:', token);
       navigate('/');
     } catch (err) {
       setError(err);

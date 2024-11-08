@@ -3,11 +3,12 @@ import { FaHouse } from 'react-icons/fa6';
 import { IoIosAddCircleOutline } from 'react-icons/io';
 import { CiLogin } from 'react-icons/ci';
 import { CiSettings } from 'react-icons/ci';
-import { Link, Outlet } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 import { FaUser } from 'react-icons/fa';
 import { useUser } from './useUser';
 export function NavBar() {
   const { user } = useUser();
+  const navigate = useNavigate();
   return (
     <>
       <div className="nav-row">
@@ -27,26 +28,18 @@ export function NavBar() {
         <div>
           <a>Gamer Page</a>
         </div>
-        <div>
-          <Link to="/sign-up">
-            <CiLogin /> Login/Sign Up
-          </Link>
+        <div onClick={() => navigate('/sign-up')}>
+          <CiLogin /> Login/Sign Up
         </div>
-        <div>
-          <Link to="/">
-            <FaHouse /> Home
-          </Link>
+        <div onClick={() => navigate('/')}>
+          <FaHouse /> Home
         </div>
-        <div>
-          <Link to={`/user/${user?.userId}`}>
-            <FaUser />
-            User Page
-          </Link>
+        <div onClick={() => navigate(`/user/${user?.userId}`)}>
+          <FaUser />
+          User Page
         </div>
-        <div>
-          <Link to="/post/new">
-            <IoIosAddCircleOutline /> Create Post
-          </Link>
+        <div onClick={() => navigate('/post/new')}>
+          <IoIosAddCircleOutline /> Create Post
         </div>
         <div>
           <CiSettings /> Settings
