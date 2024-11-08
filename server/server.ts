@@ -317,17 +317,20 @@ app.get('/api/countDislike/:postId', async (req, res, next) => {
   }
 });
 
-app.get('/api/comments/:postId', async (req, res, next) => {
+app.get('/api/read/comments/:postId', async (req, res, next) => {
   try {
-    const { postId } = req.body;
+    const { postId } = req.params;
     const sql = `
-    select "comments".*, "username", "image" from "comments"
+    select "commentText", "commentId", "username", "image" from "comments"
     join "users" using ("userId")
-    where "postId" = $1
+    where "postId" = $1;
     `;
 
-    const result = await db.query(sql, [postId]);
-    res.json(result.rows);
+    const { rows } = await db.query(sql, [postId]);
+    if (rows.length === 0) {
+      return res.status(404).json({ error: 'No comments found for this post' });
+    }
+    res.json(rows);
   } catch (err) {
     next(err);
   }
@@ -351,6 +354,28 @@ app.post('/api/comments/:postId', authMiddleware, async (req, res, next) => {
     next(err);
   }
 });
+
+app.delete(
+  '/api/comments/:commentId',
+  authMiddleware,
+  async (req, res, next) => {
+    try {
+      const { commentId } = req.params;
+      const sql = `
+    delete
+    from "comments"
+    where "commentId" = $1 and "userId" = $2
+    returning *
+    `;
+      const result = await db.query(sql, [commentId, req.user?.userId]);
+      const erase = result.rows[0];
+      if (!erase) throw new ClientError(404, 'Could not delete post');
+      res.json(erase);
+    } catch (err) {
+      next(err);
+    }
+  }
+);
 
 app.post('/api/auth/sign-in', async (req, res, next) => {
   try {

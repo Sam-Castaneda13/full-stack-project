@@ -189,7 +189,7 @@ export async function countDislikes(
 }
 
 export async function readComments(postId: number): Promise<Comment[]> {
-  const response = await fetch(`/api/comments/${postId}`);
+  const response = await fetch(`/api/read/comments/${postId}`);
   if (!response.ok) throw new Error(`Error: ${response.status}`);
   const comments = await response.json();
   return comments;
@@ -210,6 +210,16 @@ export async function addComment(
   if (!response.ok) throw new Error(`Error: ${response.status}`);
   const newPost = await response.json();
   return newPost;
+}
+
+export async function deleteComment(commentId: number): Promise<void> {
+  const response = await fetch(`/api/comments/${commentId}`, {
+    method: 'DELETE',
+    headers: {
+      Authorization: `Bearer ${readToken()}`,
+    },
+  });
+  if (!response.ok) throw new Error(`Error: ${response.status}`);
 }
 
 export function saveAuth(user: User, token: string): void {

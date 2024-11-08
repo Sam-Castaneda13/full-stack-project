@@ -16,14 +16,17 @@ import {
   Comment,
   readComments,
   addComment,
+  deleteComment,
 } from './Data';
 import { Link } from 'react-router-dom';
 import { useUser } from './useUser';
+import { FaTrash } from 'react-icons/fa';
 
 export function HomePage() {
   const [posts, setPosts] = useState<Post[]>();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<unknown>();
+  // const navigate = useNavigate();
 
   useEffect(() => {
     async function load() {
@@ -81,6 +84,11 @@ function PostDetails({ posts }: PostProps) {
   useEffect(() => {
     async function load(id: number) {
       try {
+        const likes = await countLikes(id);
+        const disliked = await countDislikes(id);
+        setCountDislike(disliked.count);
+        setCountLike(likes.count);
+
         const ifLiked = await checkIfLiked(id);
         if (ifLiked.liked === user?.userId) {
           setLike('liked');
@@ -89,15 +97,10 @@ function PostDetails({ posts }: PostProps) {
         if (ifDisliked.disliked === user?.userId) {
           setDisLike('disliked');
         }
-        const likes = await countLikes(id);
-        const disliked = await countDislikes(id);
-        setCountDislike(disliked.count);
-        setCountLike(likes.count);
 
         const comment = await readComments(id);
         setComment(comment);
       } catch (err) {
-        alert(err);
         console.log(err);
       }
     }
@@ -106,7 +109,6 @@ function PostDetails({ posts }: PostProps) {
 
   async function handleCommentSubmit(event: FormEvent<HTMLFormElement>) {
     try {
-      event.preventDefault();
       const formData = new FormData(event.currentTarget);
       const newComment = Object.fromEntries(formData) as unknown as Comment;
       await addComment(newComment, posts.postId);
@@ -240,12 +242,20 @@ type CommentProps = {
   comments: Comment;
 };
 function CommentList({ comments }: CommentProps) {
+  function handleDelete() {
+    if (!comments?.commentId) throw new Error(`If you see this well thats bad`);
+    deleteComment(comments.commentId);
+    window.location.reload();
+  }
   return (
     <li>
       <div className="comment-box">
         <div className="comment-profile">
           <img src={comments.image} className="comment-picture" />
-          <p>{comments.username}</p>
+          <p className="comment-name">{comments.username}</p>
+          <p className="trash-can" onClick={handleDelete}>
+            <FaTrash />
+          </p>
         </div>
         <div className="comment-text">
           <p>{comments.commentText}</p>
